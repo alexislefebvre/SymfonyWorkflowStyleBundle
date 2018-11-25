@@ -8,8 +8,8 @@ git:
   depth: 5
 
 cache:
-directories:
-  - $HOME/.composer/cache
+  directories:
+    - $HOME/.composer/cache
 
 php:
   - 7.1
