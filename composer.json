@@ -1,0 +1,39 @@
+{
+  "name" : "alexislefebvre/symfony-workflow-style",
+  "type" : "symfony-bundle",
+  "description" : "Symfony bundle adding style to Symfony workflow dumps",
+  "keywords" : ["symfony", "twitter", "reader", "bundle"],
+  "homepage": "https://github.com/alexislefebvre/symfony-workflow-style",
+  "license" : "MIT",
+  "authors" : [{
+    "name" : "Alexis Lefebvre",
+    "email" : "alexislefebvre@gmail.com",
+    "homepage": "https://alexislefebvre.com/",
+    "role": "Developer"
+  }],
+  "require" : {
+    "php": ">=7.1",
+    "symfony/config": "^3.4|^4.1",
+    "symfony/console": "~3.4|^4.1",
+    "symfony/dependency-injection": "^3.4|^4.1",
+    "symfony/framework-bundle": "^3.4|^4.1",
+    "symfony/http-kernel": "^3.4|^4.1",
+    "symfony/workflow": "^3.4|^4.1"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "~6.5.6|~7.0"
+  },
+  "autoload" : {
+    "psr-4" : {
+      "AlexisLefebvre\\Bundle\\SymfonyWorflowStyleBundle\\": "src/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Acme\\": "tests/"
+    }
+  },
+  "config": {
+    "sort-packages": true
+  }
+}
