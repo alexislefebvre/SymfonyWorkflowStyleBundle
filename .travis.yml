@@ -16,14 +16,13 @@ php:
   - 7.2
 
 env:
-  - SYMFONY_VERSION="^3.4"
-  - SYMFONY_VERSION="^4.1"
+  - SYMFONY_VERSION="4.1.*"
+  - SYMFONY_VERSION="^4.2"
 
 before_install:
   - phpenv config-rm xdebug.ini
 
 install:
-  - if [[ $SYMFONY_VERSION = '^3.4' ]]; then composer require symfony/lts:v3 --no-update; fi
   - composer install --no-interaction --profile --no-progress
 
 script:
