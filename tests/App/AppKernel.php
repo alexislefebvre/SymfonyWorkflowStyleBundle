@@ -12,6 +12,7 @@ class AppKernel extends Kernel
     public function registerBundles(): array
     {
         $bundles = [
+            new \Symfony\Bundle\FrameworkBundle\FrameworkBundle(),
             new \AlexisLefebvre\Bundle\SymfonyWorflowStyleBundle\SymfonyWorflowStyleBundle(),
             new \Acme\App\AcmeBundle(),
         ];
@@ -19,8 +20,9 @@ class AppKernel extends Kernel
         return $bundles;
     }
 
-    public function registerContainerConfiguration(LoaderInterface $loader): void
+    public function registerContainerConfiguration(LoaderInterface $loader)
     {
+        $loader->load(__DIR__.'/config.yaml');
     }
 
     public function getCacheDir(): string

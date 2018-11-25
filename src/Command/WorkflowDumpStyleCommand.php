@@ -11,7 +11,7 @@
 
 namespace AlexisLefebvre\Bundle\SymfonyWorflowStyleBundle\Command;
 
-use Symfony\Component\Console\Command\Command;
+use Symfony\Bundle\FrameworkBundle\Command\WorkflowDumpCommand;
 use Symfony\Component\Console\Exception\InvalidArgumentException;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -23,7 +23,7 @@ use Symfony\Component\Workflow\Marking;
 /**
  * @final
  */
-class WorkflowDumpStyleCommand extends Command
+class WorkflowDumpStyleCommand extends WorkflowDumpCommand
 {
     protected static $defaultName = 'workflow:dump-with-style';
 

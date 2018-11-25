@@ -13,9 +13,10 @@ namespace AlexisLefebvre\Bundle\SymfonyWorflowStyleBundle\Symfony\Component\Work
 
 use InvalidArgumentException;
 use Symfony\Component\Workflow\Definition;
-use Symfony\Component\Workflow\Dumper\DumperInterface;
+use Symfony\Component\Workflow\Dumper\PlantUmlDumper as BasePlantUmlDumper;
 use Symfony\Component\Workflow\Marking;
 use Symfony\Component\Workflow\Metadata\GetMetadataTrait;
+use Symfony\Component\Workflow\Transition;
 
 /**
  * PlantUmlDumper dumps a workflow as a PlantUML file.
@@ -26,33 +27,12 @@ use Symfony\Component\Workflow\Metadata\GetMetadataTrait;
  *
  * @author Sébastien Morel <morel.seb@gmail.com>
  */
-class PlantUmlDumper implements DumperInterface
+class PlantUmlDumper extends BasePlantUmlDumper
 {
     use GetMetadataTrait;
 
     private const INITIAL = '<<initial>>';
     private const MARKED = '<<marked>>';
-
-    const STATEMACHINE_TRANSITION = 'arrow';
-    const WORKFLOW_TRANSITION = 'square';
-    const TRANSITION_TYPES = array(self::STATEMACHINE_TRANSITION, self::WORKFLOW_TRANSITION);
-    const DEFAULT_OPTIONS = array(
-        'skinparams' => array(
-            'titleBorderRoundCorner' => 15,
-            'titleBorderThickness' => 2,
-            'state' => array(
-                'BackgroundColor'.self::INITIAL => '#87b741',
-                'BackgroundColor'.self::MARKED => '#3887C6',
-                'BorderColor' => '#3887C6',
-                'BorderColor'.self::MARKED => 'Black',
-                'FontColor'.self::MARKED => 'White',
-            ),
-            'agent' => array(
-                'BackgroundColor' => '#ffffff',
-                'BorderColor' => '#3887C6',
-            ),
-        ),
-    );
 
     private $transitionType = self::STATEMACHINE_TRANSITION;
     private $workflowMetadata;
@@ -88,10 +68,15 @@ class PlantUmlDumper implements DumperInterface
             foreach ($transition->getFroms() as $from) {
                 $fromEscaped = $this->escape($from);
                 foreach ($transition->getTos() as $to) {
+                    $style = $this->getTransitionStyle($transition);
+
                     $toEscaped = $this->escape($to);
-                    $transitionColor = $this->workflowMetadata->getMetadata('color', $transition) ?? '';
+
+                    $transitionEscaped = $this->getStyledEscapedTransition($transitionEscaped, $style);
+
+                    $transitionColor = $style['arrow_color'] ?? '';
                     if (!empty($transitionColor)) {
-                        $transitionColor = sprintf('[#%s]', $transitionColor);
+                        $transitionColor = sprintf('[%s]', $transitionColor);
                     }
                     if ($this->isWorkflowTransitionType()) {
                         $lines = array(
@@ -169,5 +154,27 @@ class PlantUmlDumper implements DumperInterface
     {
         // It's not possible to escape property double quote, so let's remove it
         return '"'.str_replace('"', '', $string).'"';
+    }
+
+    private function getStyledEscapedTransition(string $to, ?array $style): string
+    {
+        $label = $style['label'] ?? $to;
+
+        $color = $style['label_color'] ?? null;
+
+        if (!is_null($color)) {
+            $to = sprintf(
+                '<font color=%1$s>%2$s</font>',
+                $color,
+                $label
+            );
+        }
+
+        return $this->escape($to);
+    }
+
+    private function getTransitionStyle(Transition $transition): array
+    {
+        return $this->workflowMetadata->getMetadata('style', $transition) ?? [];
     }
 }

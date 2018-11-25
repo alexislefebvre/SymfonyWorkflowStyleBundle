@@ -1,6 +1,6 @@
 @startuml
 allow_mixing
-title SimpleDiagram
+title pull_request
 skinparam titleBorderRoundCorner 15
 skinparam titleBorderThickness 2
 skinparam state {
@@ -10,12 +10,19 @@ skinparam state {
     BorderColor<<marked>> Black
     FontColor<<marked>> White
 }
-state "a" <<initial>>
-state "b"
-state "c"
-state "d"
-"a" --> "b": "t1"
-"d" -[#Red]-> "b": "t1"
-"b" -[#Blue]-> "c": "t2"
-"b" --> "d": "t3"
+state "start" <<initial>>
+state "coding"
+state "travis"
+state "review"
+state "merged"
+state "closed"
+"start" -[#0088FF]-> "travis": "<font color=Red>My custom label</font>"
+"coding" --> "travis": "update"
+"travis" --> "travis": "update"
+"review" --> "travis": "update"
+"travis" --> "review": "wait_for_review"
+"review" --> "coding": "request_change"
+"review" --> "merged": "accept"
+"review" --> "closed": "reject"
+"closed" --> "review": "reopen"
 @enduml
