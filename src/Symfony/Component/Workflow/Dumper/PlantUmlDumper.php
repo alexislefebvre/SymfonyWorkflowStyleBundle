@@ -11,11 +11,11 @@
 
 namespace AlexisLefebvre\Bundle\SymfonyWorflowStyleBundle\Symfony\Component\Workflow\Dumper;
 
-use InvalidArgumentException;
 use Symfony\Component\Workflow\Definition;
 use Symfony\Component\Workflow\Dumper\PlantUmlDumper as BasePlantUmlDumper;
 use Symfony\Component\Workflow\Marking;
 use Symfony\Component\Workflow\Metadata\GetMetadataTrait;
+use Symfony\Component\Workflow\Metadata\MetadataStoreInterface;
 use Symfony\Component\Workflow\Transition;
 
 /**
@@ -35,14 +35,12 @@ class PlantUmlDumper extends BasePlantUmlDumper
     private const MARKED = '<<marked>>';
 
     private $transitionType = self::STATEMACHINE_TRANSITION;
+    /** @var MetadataStoreInterface */
     private $workflowMetadata;
 
     public function __construct(string $transitionType = null)
     {
-        if (!\in_array($transitionType, self::TRANSITION_TYPES, true)) {
-            throw new InvalidArgumentException("Transition type '$transitionType' does not exist.");
-        }
-        $this->transitionType = $transitionType;
+        parent::__construct($transitionType);
     }
 
     public function dump(Definition $definition, Marking $marking = null, array $options = array()): string
@@ -51,11 +49,7 @@ class PlantUmlDumper extends BasePlantUmlDumper
         $code = $this->initialize($options);
         $this->workflowMetadata = $definition->getMetadataStore();
         foreach ($definition->getPlaces() as $place) {
-            $placeEscaped = $this->escape($place);
-            $code[] =
-                "state $placeEscaped".
-                ($definition->getInitialPlace() === $place ? ' '.self::INITIAL : '').
-                ($marking && $marking->has($place) ? ' '.self::MARKED : '');
+            $code[] = $this->getState($place, $definition, $marking);
         }
         if ($this->isWorkflowTransitionType()) {
             foreach ($definition->getTransitions() as $transition) {
@@ -154,6 +148,25 @@ class PlantUmlDumper extends BasePlantUmlDumper
     {
         // It's not possible to escape property double quote, so let's remove it
         return '"'.str_replace('"', '', $string).'"';
+    }
+
+    private function getState(string $place, Definition $definition, Marking $marking = null): string
+    {
+        $placeEscaped = $this->escape($place);
+
+        $stateStyle = $this->workflowMetadata->getMetadata('style', $place);
+
+        $output = "state $placeEscaped".
+            ($definition->getInitialPlace() === $place ? ' '.self::INITIAL : '').
+            ($marking && $marking->has($place) ? ' '.self::MARKED : '');
+
+        if (isset($stateStyle['description'])) {
+            $output .= ' as '.$place.
+                PHP_EOL.
+                $place.' : '.$stateStyle['description'];
+        }
+
+        return $output;
     }
 
     private function getStyledEscapedTransition(string $to, ?array $style): string

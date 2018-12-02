@@ -12,7 +12,8 @@ skinparam state {
 }
 state "start" <<initial>>
 state "coding"
-state "travis"
+state "travis" as travis
+travis : My custom description
 state "review"
 state "merged"
 state "closed"

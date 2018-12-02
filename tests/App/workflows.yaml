@@ -14,7 +14,10 @@ framework:
                     metadata:
                         title: place start title
                 coding: ~
-                travis: ~
+                travis:
+                    metadata:
+                        style:
+                            description: 'My custom description'
                 review: ~
                 merged: ~
                 closed: ~
