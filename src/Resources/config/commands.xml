@@ -4,8 +4,8 @@
            xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
 
     <services>
-        <service id="AlexisLefebvre\Bundle\SymfonyWorflowStyleBundle\Command\WorkflowDumpStyleCommand"
-                 class="AlexisLefebvre\Bundle\SymfonyWorflowStyleBundle\Command\WorkflowDumpStyleCommand">
+        <service id="AlexisLefebvre\Bundle\SymfonyWorkflowStyleBundle\Command\WorkflowDumpStyleCommand"
+                 class="AlexisLefebvre\Bundle\SymfonyWorkflowStyleBundle\Command\WorkflowDumpStyleCommand">
             <tag name="console.command" />
         </service>
     </services>

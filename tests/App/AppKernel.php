@@ -13,7 +13,7 @@ class AppKernel extends Kernel
     {
         $bundles = [
             new \Symfony\Bundle\FrameworkBundle\FrameworkBundle(),
-            new \AlexisLefebvre\Bundle\SymfonyWorflowStyleBundle\SymfonyWorflowStyleBundle(),
+            new \AlexisLefebvre\Bundle\SymfonyWorkflowStyleBundle\SymfonyWorkflowStyleBundle(),
             new \Acme\App\AcmeBundle(),
         ];
 
@@ -27,11 +27,11 @@ class AppKernel extends Kernel
 
     public function getCacheDir(): string
     {
-        return sys_get_temp_dir().'/AlexisLefebvre/SymfonyWorflowStyleBundle/Acme/App/cache';
+        return sys_get_temp_dir().'/AlexisLefebvre/SymfonyWorkflowStyleBundle/Acme/App/cache';
     }
 
     public function getLogDir(): string
     {
-        return sys_get_temp_dir().'/AlexisLefebvre/SymfonyWorflowStyleBundle/Acme/App/logs';
+        return sys_get_temp_dir().'/AlexisLefebvre/SymfonyWorkflowStyleBundle/Acme/App/logs';
     }
 }
