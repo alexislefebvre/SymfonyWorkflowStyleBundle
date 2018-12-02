@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace AlexisLefebvre\Bundle\SymfonyWorkflowStyleBundle\Symfony\Component\Workflow\Dumper;
+namespace AlexisLefebvre\SymfonyWorkflowStyleBundle\Symfony\Component\Workflow\Dumper;
 
 use Symfony\Component\Workflow\Definition;
 use Symfony\Component\Workflow\Marking;
