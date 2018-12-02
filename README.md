@@ -39,5 +39,3 @@ Labels and colors of one transition and one state are changed.
 [PUML example image]: ./tests/fixtures/puml/arrow/complex-state-machine-nomarking.png
 [Dot example image]: ./tests/fixtures/dot/complex-state-machine-nomarking.png
 [Dot multiple state example image]: ./tests/fixtures/dot/complex-multiple-state-machine-nomarking.png
-
-### `single_state`
