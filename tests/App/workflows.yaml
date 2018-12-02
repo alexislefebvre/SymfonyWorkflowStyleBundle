@@ -88,6 +88,9 @@ framework:
                 reject:
                     from: review
                     to: closed
+                    metadata:
+                        style:
+                            arrow_color: 'Red'
                 reopen:
                     from: closed
                     to: review

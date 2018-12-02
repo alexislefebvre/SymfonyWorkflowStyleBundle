@@ -16,7 +16,7 @@ digraph workflow {
   place_61e62b213a1a56f7695845df4fc372a10cb0a73e -> place_e6cc0fb2b8dad4110ef62e9a33e5a8aa4e0f86d7 [label="update" style="solid"];
   place_61e62b213a1a56f7695845df4fc372a10cb0a73e -> place_ab43a7c9cb5b2380afc4ddf8b3e2583169b39a02 [label="request_change" style="solid"];
   place_61e62b213a1a56f7695845df4fc372a10cb0a73e -> place_e8e2ace14fcedce073756444255d2cfe24f470af [label="accept" style="solid"];
-  place_61e62b213a1a56f7695845df4fc372a10cb0a73e -> place_ea88fbaa99b73225752e2ef67593f775848160ad [label="reject" style="solid"];
+  place_61e62b213a1a56f7695845df4fc372a10cb0a73e -> place_ea88fbaa99b73225752e2ef67593f775848160ad [label="reject" style="solid" color="Red"];
   place_ea88fbaa99b73225752e2ef67593f775848160ad -> place_61e62b213a1a56f7695845df4fc372a10cb0a73e [label="reopen" style="solid"];
 }
 

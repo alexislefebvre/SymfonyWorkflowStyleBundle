@@ -70,10 +70,12 @@ class PlantUmlDumper extends BasePlantUmlDumper
 
                     $transitionEscaped = $this->getStyledEscapedTransition($transitionEscaped, $style);
 
-                    $transitionColor = $style['arrow_color'] ?? '';
-                    if (!empty($transitionColor)) {
-                        $transitionColor = sprintf('[%s]', $transitionColor);
+                    $transitionColor = '';
+
+                    if (isset($style['arrow_color'])) {
+                        $transitionColor = $this->getTransitionColor($style['arrow_color']);
                     }
+
                     if ($this->isWorkflowTransitionType()) {
                         $lines = array(
                             "$fromEscaped -${transitionColor}-> $transitionEscaped",
@@ -214,6 +216,18 @@ class PlantUmlDumper extends BasePlantUmlDumper
     private function getTransitionStyle(Transition $transition): array
     {
         return $this->workflowMetadata->getMetadata('style', $transition) ?? [];
+    }
+
+    /**
+     * Color in transition must be prefixed with “#”.
+     */
+    private function getTransitionColor(string $color): string
+    {
+        if ('#' !== substr($color, 0, 1)) {
+            $color = '#'.$color;
+        }
+
+        return sprintf('[%s]', $color);
     }
 
     /**

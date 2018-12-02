@@ -26,6 +26,6 @@ state "closed" <<DeepSkyBlue>>
 "travis" --> "review": "wait_for_review"
 "review" --> "coding": "request_change"
 "review" --> "merged": "accept"
-"review" --> "closed": "reject"
+"review" -[#Red]-> "closed": "reject"
 "closed" --> "review": "reopen"
 @enduml
