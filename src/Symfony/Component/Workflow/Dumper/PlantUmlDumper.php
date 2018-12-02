@@ -46,8 +46,10 @@ class PlantUmlDumper extends BasePlantUmlDumper
     public function dump(Definition $definition, Marking $marking = null, array $options = array()): string
     {
         $options = array_replace_recursive(self::DEFAULT_OPTIONS, $options);
-        $code = $this->initialize($options);
+
         $this->workflowMetadata = $definition->getMetadataStore();
+
+        $code = $this->initialize($options, $definition);
         foreach ($definition->getPlaces() as $place) {
             $code[] = $this->getState($place, $definition, $marking);
         }
@@ -115,7 +117,7 @@ class PlantUmlDumper extends BasePlantUmlDumper
         return implode(PHP_EOL, $code);
     }
 
-    private function initialize(array $options): array
+    private function initialize(array $options, Definition $definition): array
     {
         $code = array();
         if (isset($options['title'])) {
@@ -124,6 +126,20 @@ class PlantUmlDumper extends BasePlantUmlDumper
         if (isset($options['name'])) {
             $code[] = "title {$options['name']}";
         }
+
+        // Add style from nodes
+        foreach ($definition->getPlaces() as $place) {
+            $style = $this->getPlaceStyle($place);
+
+            if (isset($style['background_color'])) {
+                $backgroundColor = $style['background_color'];
+
+                $key = 'BackgroundColor<<'.$this->getColorId($backgroundColor).'>>';
+
+                $options['skinparams']['state'][$key] = $backgroundColor;
+            }
+        }
+
         if (isset($options['skinparams']) && \is_array($options['skinparams'])) {
             foreach ($options['skinparams'] as $skinparamKey => $skinparamValue) {
                 if (!$this->isWorkflowTransitionType() && 'agent' === $skinparamKey) {
@@ -154,11 +170,15 @@ class PlantUmlDumper extends BasePlantUmlDumper
     {
         $placeEscaped = $this->escape($place);
 
-        $stateStyle = $this->workflowMetadata->getMetadata('style', $place);
+        $stateStyle = $this->getPlaceStyle($place);
 
         $output = "state $placeEscaped".
             ($definition->getInitialPlace() === $place ? ' '.self::INITIAL : '').
             ($marking && $marking->has($place) ? ' '.self::MARKED : '');
+
+        if (isset($stateStyle['background_color'])) {
+            $output .= ' <<'.$this->getColorId($stateStyle['background_color']).'>>';
+        }
 
         if (isset($stateStyle['description'])) {
             $output .= ' as '.$place.
@@ -186,8 +206,22 @@ class PlantUmlDumper extends BasePlantUmlDumper
         return $this->escape($to);
     }
 
+    private function getPlaceStyle(string $place): array
+    {
+        return $this->workflowMetadata->getMetadata('style', $place) ?? [];
+    }
+
     private function getTransitionStyle(Transition $transition): array
     {
         return $this->workflowMetadata->getMetadata('style', $transition) ?? [];
+    }
+
+    private function getColorId(string $color): string
+    {
+        if ('#' === substr($color, 0, 1)) {
+            $color = substr($color, 1);
+        }
+
+        return $color;
     }
 }

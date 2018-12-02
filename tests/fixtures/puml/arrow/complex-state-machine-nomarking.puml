@@ -9,14 +9,16 @@ skinparam state {
     BorderColor #3887C6
     BorderColor<<marked>> Black
     FontColor<<marked>> White
+    BackgroundColor<<8800FF>> #8800FF
+    BackgroundColor<<DeepSkyBlue>> DeepSkyBlue
 }
 state "start" <<initial>>
 state "coding"
-state "travis" as travis
+state "travis" <<8800FF>> as travis
 travis : My custom description
 state "review"
 state "merged"
-state "closed"
+state "closed" <<DeepSkyBlue>>
 "start" -[#0088FF]-> "travis": "<font color=Red>My custom label</font>"
 "coding" --> "travis": "update"
 "travis" --> "travis": "update"

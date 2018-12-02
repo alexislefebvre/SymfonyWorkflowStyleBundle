@@ -18,9 +18,13 @@ framework:
                     metadata:
                         style:
                             description: 'My custom description'
+                            background_color: '#8800FF'
                 review: ~
                 merged: ~
-                closed: ~
+                closed:
+                    metadata:
+                        style:
+                            background_color: DeepSkyBlue
             transitions:
                 submit:
                     from: start

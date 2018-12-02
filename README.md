@@ -14,6 +14,10 @@ Style is added to the first transition:
 - label has custom text
 - label has custom color
 
+And to travis and closed states:
+- background color is changed for travis and closed states
+- description is added to travis node
+
 [![Example][PUML example image]][PUML example image]
 
 [Travis Master image]: https://travis-ci.org/alexislefebvre/SymfonyWorkflowStyleBundle.svg?branch=master
