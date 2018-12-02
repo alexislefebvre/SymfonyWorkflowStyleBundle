@@ -39,7 +39,7 @@
   },
   "autoload": {
     "psr-4": {
-      "AlexisLefebvre\\Bundle\\SymfonyWorflowStyleBundle\\": "src/"
+      "AlexisLefebvre\\Bundle\\SymfonyWorkflowStyleBundle\\": "src/"
     }
   },
   "autoload-dev": {

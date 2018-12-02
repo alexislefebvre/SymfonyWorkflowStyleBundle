@@ -2,7 +2,7 @@
 
 namespace Acme\Command;
 
-use AlexisLefebvre\Bundle\SymfonyWorflowStyleBundle\Command\WorkflowDumpStyleCommand;
+use AlexisLefebvre\Bundle\SymfonyWorkflowStyleBundle\Command\WorkflowDumpStyleCommand;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\Console\Tester\CommandTester;
