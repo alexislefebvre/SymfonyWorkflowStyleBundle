@@ -12,7 +12,7 @@ Builds: [![Build status][Travis Master image]][Travis Master]
 composer require alexislefebvre/symfony-workflow-style
 ```
 
-Register bundle in `Kernel`:
+Register bundle in `Kernel` (if not already done automatically by Symfony Flex):
 
 ```
 new \AlexisLefebvre\Bundle\SymfonyWorflowStyleBundle\SymfonyWorflowStyleBundle(),
