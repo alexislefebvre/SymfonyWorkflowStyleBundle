@@ -216,6 +216,9 @@ class PlantUmlDumper extends BasePlantUmlDumper
         return $this->workflowMetadata->getMetadata('style', $transition) ?? [];
     }
 
+    /**
+     * Remove “#“ from start of the color name so it can be used as an identifier.
+     */
     private function getColorId(string $color): string
     {
         if ('#' === substr($color, 0, 1)) {

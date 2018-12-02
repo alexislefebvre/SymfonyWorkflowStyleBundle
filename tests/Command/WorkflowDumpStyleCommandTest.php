@@ -50,18 +50,32 @@ class WorkflowDumpStyleCommandTest extends WebTestCase
         $this->assertSame($expectedOutput, $output);
     }
 
-    public function testDumpDot()
+    public function testDumpDotSingleState()
     {
         $this->commandTester->execute([
             'name' => 'pull_request',
             '--dump-format' => 'dot',
         ]);
 
-        $this->markTestSkipped('Dot is not implemented yet.');
+        $output = $this->commandTester->getDisplay();
+
+        $expectedOutput = $this->getFixtureFileContent('dot/complex-state-machine-nomarking.gv');
+
+        $this->assertSame($expectedOutput, $output);
+    }
+
+    public function testDumpDotMultipleState()
+    {
+        $this->commandTester->execute([
+            'name' => 'article',
+            '--dump-format' => 'dot',
+        ]);
 
         $output = $this->commandTester->getDisplay();
 
-        $this->assertContains('Current page: 1', $output);
+        $expectedOutput = $this->getFixtureFileContent('dot/complex-multiple-state-machine-nomarking.gv');
+
+        $this->assertSame($expectedOutput, $output);
     }
 
     protected function getFixtureFileContent($filePath): string

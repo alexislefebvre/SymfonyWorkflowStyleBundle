@@ -15,9 +15,9 @@ use Symfony\Bundle\FrameworkBundle\Command\WorkflowDumpCommand;
 use Symfony\Component\Console\Exception\InvalidArgumentException;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Workflow\Dumper\GraphvizDumper;
+use AlexisLefebvre\Bundle\SymfonyWorflowStyleBundle\Symfony\Component\Workflow\Dumper\GraphvizDumper;
 use AlexisLefebvre\Bundle\SymfonyWorflowStyleBundle\Symfony\Component\Workflow\Dumper\PlantUmlDumper;
-use Symfony\Component\Workflow\Dumper\StateMachineGraphvizDumper;
+use AlexisLefebvre\Bundle\SymfonyWorflowStyleBundle\Symfony\Component\Workflow\Dumper\StateMachineGraphvizDumper;
 use Symfony\Component\Workflow\Marking;
 
 /**
