@@ -13,7 +13,7 @@ class AppKernel extends Kernel
     {
         $bundles = [
             new \Symfony\Bundle\FrameworkBundle\FrameworkBundle(),
-            new \AlexisLefebvre\Bundle\SymfonyWorkflowStyleBundle\SymfonyWorkflowStyleBundle(),
+            new \AlexisLefebvre\SymfonyWorkflowStyleBundle\SymfonyWorkflowStyleBundle(),
             new \Acme\App\AcmeBundle(),
         ];
 

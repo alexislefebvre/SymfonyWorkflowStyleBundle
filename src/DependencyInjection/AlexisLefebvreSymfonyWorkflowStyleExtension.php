@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace AlexisLefebvre\Bundle\SymfonyWorkflowStyleBundle\DependencyInjection;
+namespace AlexisLefebvre\SymfonyWorkflowStyleBundle\DependencyInjection;
 
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 
-class AlexisLefebvreSymfonyWorkflowStyleBundleExtension extends Extension
+class AlexisLefebvreSymfonyWorkflowStyleExtension extends Extension
 {
     public function load(array $configs, ContainerBuilder $container): void
     {

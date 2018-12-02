@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace AlexisLefebvre\Bundle\SymfonyWorkflowStyleBundle;
+namespace AlexisLefebvre\SymfonyWorkflowStyleBundle;
 
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 

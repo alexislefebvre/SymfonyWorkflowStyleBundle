@@ -9,15 +9,15 @@
  * file that was distributed with this source code.
  */
 
-namespace AlexisLefebvre\Bundle\SymfonyWorkflowStyleBundle\Command;
+namespace AlexisLefebvre\SymfonyWorkflowStyleBundle\Command;
 
 use Symfony\Bundle\FrameworkBundle\Command\WorkflowDumpCommand;
 use Symfony\Component\Console\Exception\InvalidArgumentException;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use AlexisLefebvre\Bundle\SymfonyWorkflowStyleBundle\Symfony\Component\Workflow\Dumper\GraphvizDumper;
-use AlexisLefebvre\Bundle\SymfonyWorkflowStyleBundle\Symfony\Component\Workflow\Dumper\PlantUmlDumper;
-use AlexisLefebvre\Bundle\SymfonyWorkflowStyleBundle\Symfony\Component\Workflow\Dumper\StateMachineGraphvizDumper;
+use AlexisLefebvre\SymfonyWorkflowStyleBundle\Symfony\Component\Workflow\Dumper\GraphvizDumper;
+use AlexisLefebvre\SymfonyWorkflowStyleBundle\Symfony\Component\Workflow\Dumper\PlantUmlDumper;
+use AlexisLefebvre\SymfonyWorkflowStyleBundle\Symfony\Component\Workflow\Dumper\StateMachineGraphvizDumper;
 use Symfony\Component\Workflow\Marking;
 
 /**
