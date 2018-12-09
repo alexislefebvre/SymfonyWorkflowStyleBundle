@@ -12,7 +12,7 @@ framework:
                 draft: ~
                 wait_for_journalist:
                     metadata:
-                        style:
+                        dump_style:
                             label: 'My custom place label'
                             background_color: '#8800FF'
                 approved_by_journalist: ~
@@ -32,7 +32,7 @@ framework:
                     from: [wait_for_spellchecker]
                     to: [approved_by_spellchecker]
                     metadata:
-                        style:
+                        dump_style:
                             label: 'My custom transition label'
                             background_color: 'Chartreuse'
                 publish:
@@ -54,14 +54,14 @@ framework:
                 coding: ~
                 travis:
                     metadata:
-                        style:
+                        dump_style:
                             description: 'My custom description'
                             background_color: '#8800FF'
                 review: ~
                 merged: ~
                 closed:
                     metadata:
-                        style:
+                        dump_style:
                             background_color: DeepSkyBlue
             transitions:
                 submit:
@@ -69,7 +69,7 @@ framework:
                     to: travis
                     metadata:
                         title: transition submit title
-                        style:
+                        dump_style:
                             label: 'My custom label'
                             arrow_color: '#0088FF'
                             label_color: 'Red'
@@ -89,7 +89,7 @@ framework:
                     from: review
                     to: closed
                     metadata:
-                        style:
+                        dump_style:
                             arrow_color: 'Red'
                 reopen:
                     from: closed

@@ -272,11 +272,11 @@ class GraphvizDumper extends BaseGraphvizDumper
 
     private function getPlaceStyle(string $place): array
     {
-        return $this->workflowMetadata->getMetadata('style', $place) ?? [];
+        return $this->workflowMetadata->getMetadata('dump_style', $place) ?? [];
     }
 
     protected function getTransitionStyle(Transition $transition): array
     {
-        return $this->workflowMetadata->getMetadata('style', $transition) ?? [];
+        return $this->workflowMetadata->getMetadata('dump_style', $transition) ?? [];
     }
 }

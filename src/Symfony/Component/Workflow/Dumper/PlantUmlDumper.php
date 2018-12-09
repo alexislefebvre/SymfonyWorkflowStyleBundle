@@ -210,12 +210,12 @@ class PlantUmlDumper extends BasePlantUmlDumper
 
     private function getPlaceStyle(string $place): array
     {
-        return $this->workflowMetadata->getMetadata('style', $place) ?? [];
+        return $this->workflowMetadata->getMetadata('dump_style', $place) ?? [];
     }
 
     private function getTransitionStyle(Transition $transition): array
     {
-        return $this->workflowMetadata->getMetadata('style', $transition) ?? [];
+        return $this->workflowMetadata->getMetadata('dump_style', $transition) ?? [];
     }
 
     /**
