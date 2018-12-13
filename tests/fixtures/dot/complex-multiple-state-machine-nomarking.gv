@@ -9,10 +9,10 @@ digraph workflow {
   place_6dff671de9ce422d5ef6dc787eeb3db7a5373df3 [label="wait_for_spellchecker", shape=circle];
   place_05baa8b434e2456c21f907ccc5842506a238c319 [label="approved_by_spellchecker", shape=circle];
   place_c2807535f28e44fe6c7375dcf90518115529a8fa [label="published", shape=circle];
-  transition_9ebd600a8c17b9eb1ffd2d02dbf5e0548a5bc832 [label="request_review", shape=box shape="box" regular="1"];
-  transition_9fffc2932bf003db84d83834a773d4369f135ab1 [label="journalist_approval", shape=box shape="box" regular="1"];
-  transition_bcd0efbe08b90a2a481f6a9c51affff9f3cbd0c9 [label="My custom transition label", shape=box shape="box" regular="1" style="filled" fillcolor="Chartreuse"];
-  transition_5e2fb0c2c59448e1dec5df0f70ec85fcad1ca7b6 [label="publish", shape=box shape="box" regular="1"];
+  transition_9ebd600a8c17b9eb1ffd2d02dbf5e0548a5bc832 [label="request_review", shape="box" regular="1"];
+  transition_9fffc2932bf003db84d83834a773d4369f135ab1 [label="journalist_approval", shape="box" regular="1"];
+  transition_bcd0efbe08b90a2a481f6a9c51affff9f3cbd0c9 [label="My custom transition label", shape="box" regular="1" style="filled" fillcolor="Chartreuse"];
+  transition_5e2fb0c2c59448e1dec5df0f70ec85fcad1ca7b6 [label="publish", shape="box" regular="1"];
   place_0e7766b460fd2a39a2fd81d4a3a636b033b52be4 -> transition_9ebd600a8c17b9eb1ffd2d02dbf5e0548a5bc832 [style="solid"];
   transition_9ebd600a8c17b9eb1ffd2d02dbf5e0548a5bc832 -> place_ebeeed4452982c3b76e434bdf7d3486fe715fa45 [style="solid"];
   transition_9ebd600a8c17b9eb1ffd2d02dbf5e0548a5bc832 -> place_6dff671de9ce422d5ef6dc787eeb3db7a5373df3 [style="solid"];

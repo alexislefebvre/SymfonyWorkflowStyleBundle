@@ -14,7 +14,6 @@ namespace AlexisLefebvre\SymfonyWorkflowStyleBundle\Symfony\Component\Workflow\D
 use Symfony\Component\Workflow\Definition;
 use Symfony\Component\Workflow\Dumper\GraphvizDumper as BaseGraphvizDumper;
 use Symfony\Component\Workflow\Marking;
-use Symfony\Component\Workflow\Metadata\GetMetadataTrait;
 use Symfony\Component\Workflow\Metadata\MetadataStoreInterface;
 use Symfony\Component\Workflow\Transition;
 
@@ -30,16 +29,11 @@ use Symfony\Component\Workflow\Transition;
  */
 class GraphvizDumper extends BaseGraphvizDumper
 {
-    use GetMetadataTrait;
-
     protected static $defaultOptions = array(
         'graph' => array('ratio' => 'compress', 'rankdir' => 'LR'),
         'node' => array('fontsize' => 9, 'fontname' => 'Arial', 'color' => '#333333', 'fillcolor' => 'lightblue', 'fixedsize' => 'false', 'width' => 1),
         'edge' => array('fontsize' => 9, 'fontname' => 'Arial', 'color' => '#333333', 'arrowhead' => 'normal', 'arrowsize' => 0.5),
     );
-
-    /** @var MetadataStoreInterface */
-    protected $workflowMetadata;
 
     /**
      * {@inheritdoc}
@@ -54,8 +48,6 @@ class GraphvizDumper extends BaseGraphvizDumper
      */
     public function dump(Definition $definition, Marking $marking = null, array $options = array())
     {
-        $this->workflowMetadata = $definition->getMetadataStore();
-
         $places = $this->findPlaces($definition, $marking);
         $transitions = $this->findTransitions($definition);
         $edges = $this->findEdges($definition);
@@ -74,6 +66,8 @@ class GraphvizDumper extends BaseGraphvizDumper
      */
     protected function findPlaces(Definition $definition, Marking $marking = null)
     {
+        $workflowMetadata = $definition->getMetadataStore();
+
         $places = array();
 
         foreach ($definition->getPlaces() as $place) {
@@ -85,7 +79,7 @@ class GraphvizDumper extends BaseGraphvizDumper
                 $attributes['color'] = '#FF0000';
                 $attributes['shape'] = 'doublecircle';
             }
-            $style = $this->getPlaceStyle($place);
+            $style = $this->getPlaceStyle($place, $workflowMetadata);
             if (isset($style['background_color'])) {
                 $attributes['style'] = 'filled';
                 $attributes['fillcolor'] = $style['background_color'];
@@ -106,12 +100,14 @@ class GraphvizDumper extends BaseGraphvizDumper
      */
     protected function findTransitions(Definition $definition)
     {
+        $workflowMetadata = $definition->getMetadataStore();
+
         $transitions = array();
 
         foreach ($definition->getTransitions() as $transition) {
             $attributes = array('shape' => 'box', 'regular' => true);
 
-            $style = $this->getTransitionStyle($transition);
+            $style = $this->getTransitionStyle($transition, $workflowMetadata);
             if (isset($style['background_color'])) {
                 $attributes['style'] = 'filled';
                 $attributes['fillcolor'] = $style['background_color'];
@@ -156,7 +152,7 @@ class GraphvizDumper extends BaseGraphvizDumper
         $code = '';
 
         foreach ($transitions as $place) {
-            $code .= sprintf("  transition_%s [label=\"%s\", shape=box%s];\n", $this->dotize($place['name']), $this->escape($place['name']), $this->addAttributes($place['attributes']));
+            $code .= sprintf("  transition_%s [label=\"%s\",%s];\n", $this->dotize($place['name']), $this->escape($place['name']), $this->addAttributes($place['attributes']));
         }
 
         return $code;
@@ -167,10 +163,12 @@ class GraphvizDumper extends BaseGraphvizDumper
      */
     protected function findEdges(Definition $definition)
     {
+        $workflowMetadata = $definition->getMetadataStore();
+
         $dotEdges = array();
 
         foreach ($definition->getTransitions() as $transition) {
-            $transitionStyle = $this->getTransitionStyle($transition);
+            $transitionStyle = $this->getTransitionStyle($transition, $workflowMetadata);
             $transitionName = $transitionStyle['label'] ?? $transition->getName();
 
             foreach ($transition->getFroms() as $from) {
@@ -255,7 +253,6 @@ class GraphvizDumper extends BaseGraphvizDumper
             $code[] = sprintf('%s="%s"', $k, $this->escape($v));
         }
 
-
         return $code ? ' '.implode(' ', $code) : '';
     }
 
@@ -270,13 +267,13 @@ class GraphvizDumper extends BaseGraphvizDumper
         return implode(' ', $code);
     }
 
-    private function getPlaceStyle(string $place): array
+    private function getPlaceStyle(string $place, MetadataStoreInterface $workflowMetadata): array
     {
-        return $this->workflowMetadata->getMetadata('dump_style', $place) ?? [];
+        return $workflowMetadata->getMetadata('dump_style', $place) ?? array();
     }
 
-    protected function getTransitionStyle(Transition $transition): array
+    protected function getTransitionStyle(Transition $transition, MetadataStoreInterface $workflowMetadata): array
     {
-        return $this->workflowMetadata->getMetadata('dump_style', $transition) ?? [];
+        return $workflowMetadata->getMetadata('dump_style', $transition) ?? array();
     }
 }

@@ -13,16 +13,9 @@ namespace AlexisLefebvre\SymfonyWorkflowStyleBundle\Symfony\Component\Workflow\D
 
 use Symfony\Component\Workflow\Definition;
 use Symfony\Component\Workflow\Marking;
-use Symfony\Component\Workflow\Metadata\GetMetadataTrait;
-use Symfony\Component\Workflow\Metadata\MetadataStoreInterface;
 
 class StateMachineGraphvizDumper extends GraphvizDumper
 {
-    use GetMetadataTrait;
-
-    /** @var MetadataStoreInterface */
-    protected $workflowMetadata;
-
     /**
      * {@inheritdoc}
      *
@@ -36,8 +29,6 @@ class StateMachineGraphvizDumper extends GraphvizDumper
      */
     public function dump(Definition $definition, Marking $marking = null, array $options = array())
     {
-        $this->workflowMetadata = $definition->getMetadataStore();
-
         $places = $this->findPlaces($definition, $marking);
         $edges = $this->findEdges($definition);
 
@@ -55,12 +46,14 @@ class StateMachineGraphvizDumper extends GraphvizDumper
      */
     protected function findEdges(Definition $definition)
     {
+        $workflowMetadata = $definition->getMetadataStore();
+
         $edges = array();
 
         foreach ($definition->getTransitions() as $transition) {
-            $attributes = [];
+            $attributes = array();
 
-            $transitionStyle = $this->getTransitionStyle($transition);
+            $transitionStyle = $this->getTransitionStyle($transition, $workflowMetadata);
             $transitionName = $transitionStyle['label'] ?? $transition->getName();
 
             if (isset($transitionStyle['label_color'])) {
