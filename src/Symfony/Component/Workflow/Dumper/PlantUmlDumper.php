@@ -14,7 +14,6 @@ namespace AlexisLefebvre\SymfonyWorkflowStyleBundle\Symfony\Component\Workflow\D
 use Symfony\Component\Workflow\Definition;
 use Symfony\Component\Workflow\Dumper\PlantUmlDumper as BasePlantUmlDumper;
 use Symfony\Component\Workflow\Marking;
-use Symfony\Component\Workflow\Metadata\GetMetadataTrait;
 use Symfony\Component\Workflow\Metadata\MetadataStoreInterface;
 use Symfony\Component\Workflow\Transition;
 
@@ -29,27 +28,48 @@ use Symfony\Component\Workflow\Transition;
  */
 class PlantUmlDumper extends BasePlantUmlDumper
 {
-    use GetMetadataTrait;
-
     private const INITIAL = '<<initial>>';
     private const MARKED = '<<marked>>';
 
+    const STATEMACHINE_TRANSITION = 'arrow';
+    const WORKFLOW_TRANSITION = 'square';
+    const TRANSITION_TYPES = array(self::STATEMACHINE_TRANSITION, self::WORKFLOW_TRANSITION);
+    const DEFAULT_OPTIONS = array(
+        'skinparams' => array(
+            'titleBorderRoundCorner' => 15,
+            'titleBorderThickness' => 2,
+            'state' => array(
+                'BackgroundColor'.self::INITIAL => '#87b741',
+                'BackgroundColor'.self::MARKED => '#3887C6',
+                'BorderColor' => '#3887C6',
+                'BorderColor'.self::MARKED => 'Black',
+                'FontColor'.self::MARKED => 'White',
+            ),
+            'agent' => array(
+                'BackgroundColor' => '#ffffff',
+                'BorderColor' => '#3887C6',
+            ),
+        ),
+    );
+
     private $transitionType = self::STATEMACHINE_TRANSITION;
-    /** @var MetadataStoreInterface */
-    private $workflowMetadata;
 
     public function __construct(string $transitionType = null)
     {
-        parent::__construct($transitionType);
+        if (!\in_array($transitionType, self::TRANSITION_TYPES, true)) {
+            throw new InvalidArgumentException("Transition type '$transitionType' does not exist.");
+        }
+        $this->transitionType = $transitionType;
     }
 
     public function dump(Definition $definition, Marking $marking = null, array $options = array()): string
     {
         $options = array_replace_recursive(self::DEFAULT_OPTIONS, $options);
 
-        $this->workflowMetadata = $definition->getMetadataStore();
+        $workflowMetadata = $definition->getMetadataStore();
 
         $code = $this->initialize($options, $definition);
+
         foreach ($definition->getPlaces() as $place) {
             $code[] = $this->getState($place, $definition, $marking);
         }
@@ -64,11 +84,11 @@ class PlantUmlDumper extends BasePlantUmlDumper
             foreach ($transition->getFroms() as $from) {
                 $fromEscaped = $this->escape($from);
                 foreach ($transition->getTos() as $to) {
-                    $style = $this->getTransitionStyle($transition);
+                    $style = $this->getTransitionStyle($transition, $workflowMetadata);
 
                     $toEscaped = $this->escape($to);
 
-                    $transitionEscaped = $this->getStyledEscapedTransition($transitionEscaped, $style);
+                    $styledTransitionEscaped = $this->getStyledEscapedTransition($transitionEscaped, $style);
 
                     $transitionColor = '';
 
@@ -77,9 +97,14 @@ class PlantUmlDumper extends BasePlantUmlDumper
                     }
 
                     if ($this->isWorkflowTransitionType()) {
+                        $transitionLabel = '';
+                        // Add label only if it has a style
+                        if ($styledTransitionEscaped != $transitionEscaped) {
+                            $transitionLabel = ": $styledTransitionEscaped";
+                        }
                         $lines = array(
-                            "$fromEscaped -${transitionColor}-> $transitionEscaped",
-                            "$transitionEscaped -${transitionColor}-> $toEscaped",
+                            "$fromEscaped -${transitionColor}-> ${transitionEscaped}${transitionLabel}",
+                            "$transitionEscaped -${transitionColor}-> ${toEscaped}${transitionLabel}",
                         );
                         foreach ($lines as $line) {
                             if (!\in_array($line, $code)) {
@@ -87,7 +112,7 @@ class PlantUmlDumper extends BasePlantUmlDumper
                             }
                         }
                     } else {
-                        $code[] = "$fromEscaped -${transitionColor}-> $toEscaped: $transitionEscaped";
+                        $code[] = "$fromEscaped -${transitionColor}-> $toEscaped: $styledTransitionEscaped";
                     }
                 }
             }
@@ -121,6 +146,8 @@ class PlantUmlDumper extends BasePlantUmlDumper
 
     private function initialize(array $options, Definition $definition): array
     {
+        $workflowMetadata = $definition->getMetadataStore();
+
         $code = array();
         if (isset($options['title'])) {
             $code[] = "title {$options['title']}";
@@ -131,7 +158,7 @@ class PlantUmlDumper extends BasePlantUmlDumper
 
         // Add style from nodes
         foreach ($definition->getPlaces() as $place) {
-            $style = $this->getPlaceStyle($place);
+            $style = $this->getPlaceStyle($place, $workflowMetadata);
 
             if (isset($style['background_color'])) {
                 $backgroundColor = $style['background_color'];
@@ -170,9 +197,11 @@ class PlantUmlDumper extends BasePlantUmlDumper
 
     private function getState(string $place, Definition $definition, Marking $marking = null): string
     {
+        $workflowMetadata = $definition->getMetadataStore();
+
         $placeEscaped = $this->escape($place);
 
-        $stateStyle = $this->getPlaceStyle($place);
+        $stateStyle = $this->getPlaceStyle($place, $workflowMetadata);
 
         $output = "state $placeEscaped".
             ($definition->getInitialPlace() === $place ? ' '.self::INITIAL : '').
@@ -197,7 +226,7 @@ class PlantUmlDumper extends BasePlantUmlDumper
 
         $color = $style['label_color'] ?? null;
 
-        if (!is_null($color)) {
+        if (null !== $color) {
             $to = sprintf(
                 '<font color=%1$s>%2$s</font>',
                 $color,
@@ -208,21 +237,19 @@ class PlantUmlDumper extends BasePlantUmlDumper
         return $this->escape($to);
     }
 
-    private function getPlaceStyle(string $place): array
+    private function getPlaceStyle(string $place, MetadataStoreInterface $workflowMetadata): array
     {
-        return $this->workflowMetadata->getMetadata('dump_style', $place) ?? [];
+        return $workflowMetadata->getMetadata('dump_style', $place) ?? array();
     }
 
-    private function getTransitionStyle(Transition $transition): array
+    private function getTransitionStyle(Transition $transition, MetadataStoreInterface $workflowMetadata): array
     {
-        return $this->workflowMetadata->getMetadata('dump_style', $transition) ?? [];
+        return $workflowMetadata->getMetadata('dump_style', $transition) ?? array();
     }
 
-    /**
-     * Color in transition must be prefixed with “#”.
-     */
     private function getTransitionColor(string $color): string
     {
+        // PUML format requires that color in transition have to be prefixed with “#”.
         if ('#' !== substr($color, 0, 1)) {
             $color = '#'.$color;
         }
@@ -230,15 +257,9 @@ class PlantUmlDumper extends BasePlantUmlDumper
         return sprintf('[%s]', $color);
     }
 
-    /**
-     * Remove “#“ from start of the color name so it can be used as an identifier.
-     */
     private function getColorId(string $color): string
     {
-        if ('#' === substr($color, 0, 1)) {
-            $color = substr($color, 1);
-        }
-
-        return $color;
+        // Remove “#“ from start of the color name so it can be used as an identifier.
+        return ltrim($color, '#');
     }
 }

@@ -8,7 +8,6 @@ framework:
                 - Symfony\Bundle\FrameworkBundle\Tests\DependencyInjection\FrameworkExtensionTest
             initial_place: draft
             places:
-                # simple format
                 draft: ~
                 wait_for_journalist:
                     metadata:
