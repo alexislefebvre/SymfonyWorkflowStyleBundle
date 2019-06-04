@@ -1,5 +1,7 @@
 # symfony-workflow-style-bundle
 
+:warning: This code has been merged in https://github.com/symfony/symfony/pull/29538, install Symfony 4.3+ to use this feature.
+
 Add style to Symfony workflow dumps
 
 [Packagist ![Latest Stable Version][Packagist Stable Image] ![Latest Unstable Version][Packagist Unstable Image]][Packagist]
